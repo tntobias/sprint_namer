@@ -1,4 +1,4 @@
-module github.com/blushft/sprint_namer
+module github.com/tntobias/sprint_namer
 
 go 1.17
 

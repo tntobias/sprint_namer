@@ -1,19 +1,26 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"strings"
 	"time"
 )
 
-var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+//go:embed foods.json
+var foodsJson []byte
 
-var count = 1
+//go:embed adj.txt
+var adjs []byte
+
+var (
+	r     = rand.New(rand.NewSource(time.Now().UnixNano()))
+	count = 1
+)
 
 func init() {
 	flag.IntVar(&count, "c", 1, "number of names to generate")
@@ -68,13 +75,8 @@ type FoodItem struct {
 }
 
 func loadFood() (Foods, error) {
-	f, err := os.ReadFile("./foods.json")
-	if err != nil {
-		return nil, err
-	}
-
 	var foods Foods
-	if err := json.Unmarshal(f, &foods); err != nil {
+	if err := json.Unmarshal(foodsJson, &foods); err != nil {
 		return nil, err
 	}
 
@@ -89,10 +91,5 @@ func (a Adjectives) Random() string {
 }
 
 func loadAdj() (Adjectives, error) {
-	f, err := os.ReadFile("./adj.txt")
-	if err != nil {
-		return nil, err
-	}
-
-	return strings.Split(string(f), "\n"), nil
+	return strings.Split(string(adjs), "\n"), nil
 }
